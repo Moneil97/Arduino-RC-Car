@@ -13,20 +13,23 @@ import java.awt.Color;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JScrollBar;
 
 import java.awt.GridLayout;
+
 import javax.swing.JScrollPane;
 
 public class Wifi_Tester extends JFrame{
 
 	private static final long serialVersionUID = 1L;
-	private JTextField inputTextbox;
 	private String ip = "192.168.1.202";  // the remote IP address
 	private int port  = 8888;    // the destination port
-	private JPanel outputBox;
-	private JButton sendButton;
+	private JTextField inputTextbox;
 	private JScrollPane scrollPane;
-
+	private JButton sendButton;
+	private JPanel outputBox;
+	private JScrollBar scrollBar;
+	
 	public Wifi_Tester() {
 		//Connect to Arduino Ethernet Board
 		UDP udp = new UDP(this, 6000);
@@ -34,7 +37,7 @@ public class Wifi_Tester extends JFrame{
 		udp.listen(true);
 		
 		//Setup JFrame
-		setSize(322,269);
+		setSize(304,388);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		
@@ -45,7 +48,7 @@ public class Wifi_Tester extends JFrame{
 		inputTextbox = new JTextField();
 		inputTextbox.addActionListener(new ActionListener() {
 			
-			@Override
+			@Override //Called when Enter is pressed
 			public void actionPerformed(ActionEvent e) {
 				sendButton.doClick();
 			}
@@ -56,7 +59,7 @@ public class Wifi_Tester extends JFrame{
 		sendButton = new JButton("Send");
 		sendButton.addActionListener(new ActionListener() {
 			
-			@Override
+			@Override 
 			public void actionPerformed(ActionEvent e) {
 				
 				//Add Sent message to GUI
@@ -64,6 +67,7 @@ public class Wifi_Tester extends JFrame{
 				temp.setForeground(Color.black);
 				outputBox.add(temp);
 				outputBox.revalidate();
+				scrollBar.setValue(scrollBar.getMaximum());
 				
 				//Send string to Arduino Ethernet Board
 				udp.send(inputTextbox.getText(), ip, port);
@@ -74,6 +78,7 @@ public class Wifi_Tester extends JFrame{
 		lowerPanel.add(sendButton, BorderLayout.EAST);
 		
 		scrollPane = new JScrollPane();
+		scrollBar = scrollPane.getVerticalScrollBar();
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
 		
 		outputBox = new JPanel();
@@ -89,15 +94,15 @@ public class Wifi_Tester extends JFrame{
 	public void receive(byte[] message) {
 		
 		String rec = "";
-		for (byte b : message){
+		for (byte b : message)
 			rec += (char) b;
-		}
 		
 		//Add message to GUI
 		JLabel temp = new JLabel(rec);
 		temp.setForeground(Color.blue);
 		outputBox.add(temp);
 		outputBox.revalidate();
+		scrollBar.setValue(scrollBar.getMaximum());
 	 }
 	
 	public static void say(Object s){
