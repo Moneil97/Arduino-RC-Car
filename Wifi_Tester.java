@@ -100,12 +100,19 @@ public class Wifi_Tester extends JFrame{
 	}
 	
 	public void receive(byte[] message) {
+		
+		System.out.println("\nReceived:");
+		System.out.println("--------------------");
+		
 		for (byte b : message){
 			System.out.print((char) b);
 		}
-		System.out.println();
+		System.out.println("\n--------------------");
 	 }
 	
+	public static void say(Object s){
+		System.out.println("System: " + s);
+	}
 	
 
 	public static void main(String[] args) {
