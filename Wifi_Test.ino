@@ -57,50 +57,29 @@ void loop() {
   int packetSize = udp.parsePacket();
   if(packetSize)
   {
-    Serial.print("Received packet of size ");
-    Serial.println(packetSize);
-    Serial.print("From ");
     IPAddress remote = udp.remoteIP();
-    for (int i =0; i < 4; i++)
-    {
-      Serial.print(remote[i], DEC);
-      if (i < 3)
-      {
-        Serial.print(".");
-      }
-    }
-    Serial.print(", port ");
-    Serial.println(udp.remotePort());
 
     // read the packet into packetBufffer
     char packetBuffer [packetSize];
     udp.read(packetBuffer, packetSize/*UDP_TX_PACKET_MAX_SIZE*/);
     //String message(packetBuffer);
-    Serial.println("Contents:");
-    Serial.println(packetBuffer);
+//    Serial.println("Contents:");
+//    Serial.println(packetBuffer);
     
     if (packetBuffer[0] == '3'){
       if (packetBuffer[1] == '7'){
-        left();
-//        udp.println("ON");
-//        udp.send("ON");
+        on();
+        Serial.println("AT");
       }
 //      else if (packetBuffer[1] == '6')
 //        straight();
       else if (packetBuffer[1] == '9'){
-        right();
+        off();
 //        udp.println("OFF");
 //        udp.send("OFF");
       }
-//      else if (packetBuffer[1] == '8')
-//        forward();
     }
-//    if (packetBuffer[0] == '4'){
-//      if (packetBuffer[1] == '0')
-//        reverse();
-//      else if (packetBuffer[1] == '1')
-//        still();
-//    }
+
   
 //    // send a reply, to the IP address and port that sent us the packet we received
 //    udp.beginPacket(udp.remoteIP(), udp.remotePort());
@@ -110,27 +89,30 @@ void loop() {
   }
   
   delay(10);
+  
+  if (Serial.available() > 0){
+    String output = "";
+    while (Serial.available() > 0){
+//      char buffer = Serial.read();
+        output += (char) Serial.read();
+    }
+    
+    udp.beginPacket(udp.remoteIP(), udp.remotePort());
+    
+    
+    for (int i = 0; i < output.length(); i++){
+      udp.write(output.charAt(i));
+    }
+    
+//    udp.write(output);
+    udp.endPacket();
+    
+  }
+  
+  
 }
 
-//void still(){
-//  analogWrite(rearEnablePin, 0);
-//  digitalWrite(rearLogic1Pin, LOW);
-//  digitalWrite(rearLogic2Pin, LOW);
-//}
-//
-//void reverse(){
-//  analogWrite(rearEnablePin, vel);
-//  digitalWrite(rearLogic1Pin, HIGH);
-//  digitalWrite(rearLogic2Pin, LOW);
-//}
-//
-//void forward(){
-//  analogWrite(rearEnablePin, vel);
-//  digitalWrite(rearLogic1Pin, LOW);
-//  digitalWrite(rearLogic2Pin, HIGH);
-//}
-
-void left(){
+void on(){
 //  digitalWrite(frontLogic1Pin, LOW);
 //  digitalWrite(frontLogic2Pin, HIGH);
     digitalWrite(8, HIGH);
@@ -139,7 +121,7 @@ void left(){
     udp.endPacket();
 }
 
-void right(){
+void off(){
 //  digitalWrite(frontLogic1Pin, HIGH);
 //  digitalWrite(frontLogic2Pin, LOW);
     digitalWrite(8, LOW);
@@ -147,51 +129,5 @@ void right(){
     udp.write("OFF");
     udp.endPacket();
 }
-
-//void straight(){
-//  digitalWrite(frontLogic1Pin, LOW);
-//  digitalWrite(frontLogic2Pin, LOW);
-//}
-
-
-/*
-  Processing sketch to run with this example
- =====================================================
- 
- // Processing UDP example to send and receive string data from Arduino 
- // press any key to send the "Hello Arduino" message
- 
- 
- import hypermedia.net.*;
- 
- UDP udp;  // define the UDP object
- 
- 
- void setup() {
- udp = new UDP( this, 6000 );  // create a new datagram connection on port 6000
- //udp.log( true ); 		// <-- printout the connection activity
- udp.listen( true );           // and wait for incoming message  
- }
- 
- void draw()
- {
- }
- 
- void keyPressed() {
- String ip       = "192.168.1.177";	// the remote IP address
- int port        = 8888;		// the destination port
- 
- udp.send("Hello World", ip, port );   // the message to send
- 
- }
- 
- void receive( byte[] data ) { 			// <-- default handler
- //void receive( byte[] data, String ip, int port ) {	// <-- extended handler
- 
- for(int i=0; i < data.length; i++) 
- print(char(data[i]));  
- println();   
- }
- */
 
 
