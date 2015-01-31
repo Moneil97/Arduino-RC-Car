@@ -58,58 +58,52 @@ void loop() {
   if(packetSize)
   {
     IPAddress remote = udp.remoteIP();
-
     // read the packet into packetBufffer
     char packetBuffer [packetSize];
-    udp.read(packetBuffer, packetSize/*UDP_TX_PACKET_MAX_SIZE*/);
-    //String message(packetBuffer);
-//    Serial.println("Contents:");
-//    Serial.println(packetBuffer);
+    udp.read(packetBuffer, packetSize);
     
     if (packetBuffer[0] == '3'){
       if (packetBuffer[1] == '7'){
         on();
         Serial.println("AT");
       }
-//      else if (packetBuffer[1] == '6')
-//        straight();
       else if (packetBuffer[1] == '9'){
         off();
-//        udp.println("OFF");
-//        udp.send("OFF");
       }
     }
-
-  
-//    // send a reply, to the IP address and port that sent us the packet we received
-//    udp.beginPacket(udp.remoteIP(), udp.remotePort());
-////    Udp.write(ReplyBuffer);
-//     udp.write(packetBuffer);
-//    udp.endPacket();
+    else{
+      String out = "";
+      for (int i = 0; i < sizeof(packetBuffer) / sizeof(char); i++){
+        out += (char) packetBuffer[i];
+      }
+    
+      Serial.println(out);
+      out = "Arduino received and sent to WIFI: " + out;
+      sendToUDP(out);
+    }
   }
-  
-  delay(10);
   
   if (Serial.available() > 0){
     String output = "";
     while (Serial.available() > 0){
-//      char buffer = Serial.read();
         output += (char) Serial.read();
     }
     
-    udp.beginPacket(udp.remoteIP(), udp.remotePort());
-    
-    
-    for (int i = 0; i < output.length(); i++){
-      udp.write(output.charAt(i));
-    }
-    
-//    udp.write(output);
-    udp.endPacket();
-    
+    sendToUDP(output);
   }
   
+  delay(10);
+}
+
+void sendToUDP(String s){
   
+  udp.beginPacket(udp.remoteIP(), udp.remotePort());
+    
+    for (int i = 0; i < s.length(); i++){
+      udp.write(s.charAt(i));
+    }
+    
+    udp.endPacket();
 }
 
 void on(){
