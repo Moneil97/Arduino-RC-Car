@@ -40,6 +40,7 @@ char  ReplyBuffer[] = "acknowledged";       // a string to send back
 
 // An EthernetUDP instance to let us send and receive packets over UDP
 EthernetUDP udp;
+boolean debug = false;
 
 void setup() {
   
@@ -50,6 +51,9 @@ void setup() {
   udp.begin(localPort);
 
   Serial.begin(9600);
+  Serial.println("AT+CIPMUX=1");
+  delay(1000);
+  Serial.println("AT+CIPSERVER=1,1336");
 }
 
 void loop() {
@@ -87,9 +91,24 @@ void loop() {
     String output = "";
     while (Serial.available() > 0){
         output += (char) Serial.read();
+        if (output.endsWith("/E"))
+          break;
+        delay(10);
     }
     
     sendToUDP(output);
+    
+//    if (output.indexOf("+IPD") > -1){
+      if (output.indexOf("/S") > -1){
+      String command = output.substring(output.indexOf("/S")+2, output.lastIndexOf("/E"));
+      sendToUDP("Command: " + command);
+      
+      if (command.equals("on"))
+        on();
+      else if (command.equals("off"))
+        off();
+    }
+    
   }
   
   delay(10);
@@ -97,31 +116,30 @@ void loop() {
 
 void sendToUDP(String s){
   
-  udp.beginPacket(udp.remoteIP(), udp.remotePort());
+  if (debug){
+  
+      udp.beginPacket(udp.remoteIP(), udp.remotePort());
     
-    for (int i = 0; i < s.length(); i++){
-      udp.write(s.charAt(i));
-    }
+      for (int i = 0; i < s.length(); i++){
+        udp.write(s.charAt(i));
+      }
     
-    udp.endPacket();
+      udp.endPacket();
+  }
 }
 
 void on(){
 //  digitalWrite(frontLogic1Pin, LOW);
 //  digitalWrite(frontLogic2Pin, HIGH);
     digitalWrite(8, HIGH);
-    udp.beginPacket(udp.remoteIP(), udp.remotePort());
-    udp.write("ON");
-    udp.endPacket();
+    sendToUDP("ON");
 }
 
 void off(){
 //  digitalWrite(frontLogic1Pin, HIGH);
 //  digitalWrite(frontLogic2Pin, LOW);
     digitalWrite(8, LOW);
-     udp.beginPacket(udp.remoteIP(), udp.remotePort());
-    udp.write("OFF");
-    udp.endPacket();
+    sendToUDP("OFF");
 }
 
 
