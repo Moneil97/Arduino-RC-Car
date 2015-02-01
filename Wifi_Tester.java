@@ -93,6 +93,15 @@ public class Wifi_Tester extends JFrame{
 	//Called when Arduino sends feedback through Ethernet
 	public void receive(byte[] message) {
 		
+		System.out.println("\nReceived:");
+		System.out.println("--------------------");
+		
+		for (byte b : message){
+			System.out.print((char) b);
+		}
+		System.out.println("\n--------------------");
+		
+		
 		String rec = "";
 		for (byte b : message)
 			rec += (char) b;
