@@ -19,7 +19,7 @@ import java.awt.GridLayout;
 
 import javax.swing.JScrollPane;
 
-public class Wifi_Tester extends JFrame{
+public class Wifi_Module_Debugger_GUI extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 	private String ip = "192.168.1.202";  // the remote IP address
@@ -30,7 +30,7 @@ public class Wifi_Tester extends JFrame{
 	private JPanel outputBox;
 	private JScrollBar scrollBar;
 	
-	public Wifi_Tester() {
+	public Wifi_Module_Debugger_GUI() {
 		//Connect to Arduino Ethernet Board
 		UDP udp = new UDP(this, 6000);
 		udp.broadcast(true);
@@ -119,7 +119,7 @@ public class Wifi_Tester extends JFrame{
 	}
 	
 	public static void main(String[] args) {
-		new Wifi_Tester();
+		new Wifi_Module_Debugger_GUI();
 	}
 
 }

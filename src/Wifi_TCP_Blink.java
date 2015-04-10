@@ -5,11 +5,11 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 
-public class TCPClient {
+public class Wifi_TCP_Blink {
 
 	private static Socket sock;
 
-	public TCPClient() throws IOException {
+	public Wifi_TCP_Blink() throws IOException {
 		
 		sock = new Socket("192.168.1.171",1336);
 		System.out.println(sock);
@@ -42,7 +42,7 @@ public class TCPClient {
 	}
 
 	public static void main(String[] args) throws Exception{
-		new TCPClient();
+		new Wifi_TCP_Blink();
 	}
 	
 	public void send(String s) throws IOException{
