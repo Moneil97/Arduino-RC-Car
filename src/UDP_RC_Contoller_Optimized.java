@@ -24,7 +24,7 @@ public class UDP_RC_Contoller_Optimized extends JFrame{
 	public UDP_RC_Contoller_Optimized() throws IOException {
 		
 		sock = new DatagramSocket();
-		sock.connect(InetAddress.getByName("192.168.1.171"), 1336);
+		sock.connect(InetAddress.getByName(/*"192.168.1.171"*/"oneil.asuscomm.com"), 1336);
 		System.out.println(sock);
 		
 		setSize(200,200);
@@ -104,25 +104,25 @@ public class UDP_RC_Contoller_Optimized extends JFrame{
 		
 		public void sendUpdate() {
 			
-			//Down to 4 byte messages
+			String message = "";
 			
-			String message = "/";
-			
-			if ((left && right) || (!left && !right))
+			if ((left && right) || (!left && !right)) //straight
 				message+=0;
-			else if (left && !right)
+			else if (left && !right) //left
 				message+=1;
-			else if (!left && right)
+			else if (!left && right) //right
 				message+=2;
-			if ((up && down) || (!up && !down))
+			if ((up && down) || (!up && !down)) //stop
 				message +=0;
-			else if (up && !down)
+			else if (up && !down) //forward
 				message+=1;
-			else if (!up && down)
+			else if (!up && down) //reverse
 				message+=2;
 			
-			message += "\\";
+			message += "";
 			try {
+				//1st digit is turning
+				//2nd digit is moving
 				sock.send(new DatagramPacket(message.getBytes(), message.length()));
 				say(message);
 			} catch (IOException e) {
