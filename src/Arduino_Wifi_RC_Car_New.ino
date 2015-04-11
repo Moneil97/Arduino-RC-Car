@@ -27,7 +27,7 @@ void loop() {
     String output = "";
     while (Serial.available() > 0){
         output += (char) Serial.read();
-        if (output.endsWith("\\"))
+        if (output.endsWith("$"))
           break;
         delay(10);
     }

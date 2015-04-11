@@ -119,7 +119,7 @@ public class UDP_RC_Contoller_Optimized extends JFrame{
 			else if (!up && down) //reverse
 				message+=2;
 			
-			message += "";
+			message += "$";
 			try {
 				//1st digit is turning
 				//2nd digit is moving
