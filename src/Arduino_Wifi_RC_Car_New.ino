@@ -1,5 +1,5 @@
 
-int rearEnablePin = 3; //Controls Speed
+//int rearEnablePin = 3; //Controls Speed
 int rearLogic1Pin = 5; 
 int rearLogic2Pin = 2; //If same will turn motor off, if differnt will change polarity;
 
@@ -9,11 +9,10 @@ int vel = 200;
 
 void setup() {
   
-  pinMode(3, OUTPUT);
-  pinMode(5, OUTPUT);
-  pinMode(6, OUTPUT);
-  pinMode(7, OUTPUT);
-  pinMode(8, OUTPUT);
+  pinMode(rearLogic1Pin, OUTPUT);
+  pinMode(rearLogic2Pin, OUTPUT);
+  pinMode(frontLogic1Pin, OUTPUT);
+  pinMode(frontLogic2Pin, OUTPUT);
 
   Serial.begin(9600);
   Serial.println("AT+CIPMUX=1");
@@ -64,19 +63,19 @@ void loop() {
 }
 
 void still(){
-  analogWrite(rearEnablePin, 0);
+  //analogWrite(rearEnablePin, 0);
   digitalWrite(rearLogic1Pin, LOW);
   digitalWrite(rearLogic2Pin, LOW);
 }
 
 void reverse(){
-  analogWrite(rearEnablePin, vel);
+  //analogWrite(rearEnablePin, vel);
   digitalWrite(rearLogic1Pin, HIGH);
   digitalWrite(rearLogic2Pin, LOW);
 }
 
 void forward(){
-  analogWrite(rearEnablePin, vel);
+  //analogWrite(rearEnablePin, vel);
   digitalWrite(rearLogic1Pin, LOW);
   digitalWrite(rearLogic2Pin, HIGH);
 }

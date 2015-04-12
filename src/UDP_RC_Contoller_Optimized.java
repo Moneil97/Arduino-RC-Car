@@ -88,7 +88,7 @@ public class UDP_RC_Contoller_Optimized extends JFrame{
 					pack.sendUpdate();
 					
 					try {
-						Thread.sleep(1000/*/5*//3);
+						Thread.sleep(1000/*/5*//2);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
